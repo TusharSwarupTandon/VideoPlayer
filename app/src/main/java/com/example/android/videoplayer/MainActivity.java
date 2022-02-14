@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements SelectListener
 {
     RecyclerView recyclerView;
     List<File> fileList;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager((new GridLayoutManager(this,2)));
         fileList = new ArrayList<>();
         fileList.addAll(findVideos(path));
-        customAdapter = new CustomAdapter(this, fileList);
+        customAdapter = new CustomAdapter(this, fileList, this);
         customAdapter.setHasStableIds(true);
         recyclerView.setAdapter(customAdapter);
     }
@@ -89,5 +90,12 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return myVideos;
+    }
+
+    @Override
+    public void onFileClicked(File file)
+    {
+        startActivity(new Intent(MainActivity.this, PlayerActivity.class)
+        .putExtra("VIDEO", file.getAbsoluteFile()));
     }
 }
